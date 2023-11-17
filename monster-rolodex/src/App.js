@@ -1,17 +1,30 @@
 // import logo from './logo.svg';
 import './App.css';
 import React, { Component } from 'react';
-
+import { CardList } from './components/card-list-components/card-list-components';
+import { SearchBox } from './components/search_box/search-box-component';
 class App extends Component{
 
+  constructor()
+  {
+    super();
+    this.state={
+      monsters:[],
+      searchField:''
+    }
+  }
   componentDidMount(){
-    fetch("https://jsonplaceholder.typicode.com/users").then(response=>console.log(response.json()))
+    fetch("https://jsonplaceholder.typicode.com/users").then(response=>response.json()).then(users=>
+    this.setState({monsters:users}))
   }
 
   render(){
+    const {monsters,searchField}=this.state;
+    const filteredMonsters=monsters.filter(monster=>monster.name.toLowerCase().includes(searchField.toLowerCase()))
     return (
       <div className="App">
-        <h1>Hello world</h1>
+        <SearchBox placeholder="search monster" handlechange={e=>{this.setState({searchField:e.target.value})}}/>
+        <CardList monsters={filteredMonsters} />
       </div>
     );
   }
